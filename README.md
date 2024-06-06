@@ -117,16 +117,17 @@ docker compose -p kitchenpos up -d
 
 
 ### 메뉴
-| 한글명      | 영문명                  | 설명                                                         |
-|----------|----------------------|------------------------------------------------------------|
-| 메뉴       | Menu                 | 손님에게 판매할 수 있는 서비스 정보를 의미한다.                                |
-| 메뉴 이름    | Name                 | 메뉴의 이름으로 비속어는 포함될 수 없다.                                    |
-| 메뉴 가격    | Price                | 메뉴의 가격으로 0원 이상이다.                                          |
-| 메뉴 상품    | MenuProduct          | 메뉴를 구성하기 위해 상품에 순서와 개수를 부여한 것이다.                           |
-| 메뉴 상태    | MenuStatus           | 테이블의 공개가능여부를 상태로 나타낸 것으로 공개, 비공개로 표현한다.                    |
-| 메뉴 공개    | Display              | 메뉴를 공개하여 손님이 주문할 수 있는 상태이다.                                |
-| 메뉴 비공개   | Hide                 | 메뉴를 비공개하여 손님이 주문할 수 없는 상태이다. 메뉴 판매 조건을 만족하지 못할 경우 비공개가 된다. |
-| 메뉴 판매 조건 | MenuSellingCondition | 메뉴의 가격이 메뉴상품들의 가격의 합보다 작아야한다.                              |
+| 한글명      | 영문명                 | 설명                                                        |
+|----------|---------------------|-----------------------------------------------------------|
+| 메뉴       | Menu                | 손님에게 판매할 수 있는 서비스 정보를 의미한다.                               |
+| 메뉴 이름    | Name                | 메뉴의 이름으로 비속어는 포함될 수 없다.                                   |
+| 메뉴 가격    | Price               | 메뉴의 가격으로 0원 이상이다.                                         |
+| 메뉴 상품    | MenuProduct         | 메뉴를 구성하기 위해 상품에 순서와 개수를 부여한 것이다.                          |
+| 메뉴 상품 순서 | Sequence            | 메뉴상품의 순서번호를 의미한다. 메뉴상품 목록이 있다면 번호가 작을수록 우선적으로 배치된다.       |
+| 메뉴 상태    | MenuStatus          | 테이블의 공개가능여부를 상태로 나타낸 것으로 공개, 비공개로 표현한다.                   |
+| 메뉴 공개    | Display             | 메뉴를 공개하여 손님이 주문할 수 있는 상태이다.                               |
+| 메뉴 비공개   | Hide                | 메뉴를 비공개하여 손님이 주문할 수 없는 상태이다. 메뉴 판매 조건을 만족하지 못할 경우 비공개가 된다. |
+| 메뉴 판매 조건 | MenuSellingCondition | 메뉴를 판매하기 위해 만족되야하는 조건을 의미한다.                              |
 
 ### 주문테이블
 | 한글명       | 영문명            | 설명                                          |
@@ -185,26 +186,37 @@ docker compose -p kitchenpos up -d
 
 # 모델링
 ## 상품
+**속성**
 - `Product`는 식별자, `Name`, `Price`를 가진다.
 - `Name`은 필수이며, 비속어를 포함하지 않아야한다.
 - `Price`는 0원 이상이어야한다.
+
+**행위**
 - `Product`를 등록할 수 있다.
-- `Product`는 `Price`를 변경할 수 있다.
+- `Price`를 변경할 수 있다.
 
 ## 메뉴
 ### 메뉴그룹
+**속성**
 - `MenuGroup`은 식별자와 `Name`을 가진다.
 - `Name`은 필수이며, 1자 이상이어야한다.
+
+**행위**
 - `MenuGroup`을 등록할 수 있다.
 
 ### 메뉴
-- `Menu`는 식별자와 `Name`, `Price`, `MenuGroup`식별자, `MenuProduct`목록, `MenuStatus`를 가진다.
+**속성**
+- `Menu`는 식별자, `Name`, `Price`, `MenuGroup`식별자, `MenuProduct`목록, `MenuStatus`를 가진다.
 - `Name`은 필수이며, 비속어를 포함하지 않아야한다.
 - `Price`는 0원 이상이어야한다.
 - `MenuGroup` 식별자는 등록된 `MenuGroup`의 식별자여야한다.
 - `MenuProduct`는 1개 이상이어야한다.
-- `MenuProduct`는 `Seq`, 등록된 `Product`의 식별자, `Price`, 수량을 가진다.
+- `MenuProduct`는 `Sequence`, 등록된 `Product`의 식별자, `Price`, 수량을 가진다.
 - `MenuStatus`는 `Hide`와 `Display`가 있다.
+- `MenuSellingCondition`은 다음과 같다.
+  1. 메뉴의 가격이 메뉴상품들의 가격의 합보다 작아야한다.
+
+**행위**
 - `Menu`를 등록할 수 있다.
   - `MenuSellingCondition`을 만족해야한다.
 - `Menu`의 `Price`를 변경한다.
@@ -214,11 +226,14 @@ docker compose -p kitchenpos up -d
   - `MenuSellingCondition`을 만족해야한다.
 - 등록된 `Product`의 `Price`가 변경되어 `MenuSellingCondition`을 만족하지 못한다면 `MenuStatus`는 `Hide`로 변경된다.
 
-## 매장식사 주문
+## 주문
 ### 주문테이블
+**속성**
 - `OrderTable`은 식별자와 `Name`, `NumberOfGuests`, `TableStatus`를 가진다.
 - `Name`은 필수이며 1자 이상이어야한다.
 - `TableStatus`는 `sit`, `clear`가 있다.
+
+**행위**
 - `OrderTable`을 등록할 수 있다.
   - `TableStatus`는 `clear`되야한다.
   - `NumberOfGuests`는 0명이 된다.
@@ -231,28 +246,37 @@ docker compose -p kitchenpos up -d
   - 변경할 `NumberOfGuests`는 0명 이상이어야한다.
 
 ### 매장식사 주문
+**속성**
 - `Order`는 `OrderType`이 `EAT_IN`이며 `OrderStatus`, `주문시간`, `OrderLineItem`목록, `OrderTable`을 가진다.
 - `OrderStatus`는 `WAITING`부터 시작한다.
 - `OrderTable`이 필수이며 `TableStatus`가 sit`이어야한다.
 - `OrderLineItem`은 1개 이상 필요하다.
 - `OrderLineItem`의 `Menu`는 `MenuStatus`가 `Display`여야한다.
+
+**행위**
+- 주문을 등록할 수 있다.
 - `OrderStatus`를 `ACCEPTED`로 변경한다.
   - `OrderStatus`는 `WAITING`이어야한다.
 - `OrderStatus`를 `SERVED`로 변경한다.
   - `OrderStatus`는 `ACCEPTED`이어야한다.
 - `OrderStatus`를 `COMPLETED`로 변경한다.
   - `OrderStatus`는 `SERVED`이어야한다.
-  - `OrderTable`은 다른 주문이 존재하지 않는다면 `TableStatus`를 `clear`한다.
+  - `OrderTable`의 모든 주문이 완료되면 `TableStatus`를 `clear`한다.
 
 ## 배달주문
+**속성**
 - `Order`는 `OrderType`이 `DELIVERY`이며 `OrderStatus`, `주문시간`, `OrderLineItem`목록, `DeliveryAddress`을 가진다.
 - `OrderStatus`는 `WAITING`부터 시작한다.
 - `DeliveryAddress`는 필수이며 0자 이상이어야한다.
 - `OrderLineItem`은 1개 이상 필요하다.
 - `OrderLineItem`의 `quantity`는 0개 이상이어야한다.
 - `OrderLineItem`의 `Menu`는 `MenuStatus`가 `Display`여야한다.
+
+**행위**
+- 주문을 등록할 수 있다.
 - `OrderStatus`를 `ACCEPTED`로 변경한다.
-  - `OrderStatus`는 `WAITING`이어야한다.
+  - `OrderStatus`는 `WAITING`이어야한다. 
+  - 배달 대행 업체에 배달을 요청한다.
 - `OrderStatus`를 `SERVED`로 변경한다.
   - `OrderStatus`는 `ACCEPTED`이어야한다.
 - `OrderStatus`를 `DELIVERING`로 변경한다.
@@ -263,14 +287,16 @@ docker compose -p kitchenpos up -d
   - `OrderStatus`는 `DELIVERED`이어야한다.
 
 ## 포장주문
+**속성**
 - `Order`는 `OrderType`이 `TAKE_OUT`이며 `OrderStatus`, `주문시간`, `OrderLineItem`목록을 가진다.
 - `OrderStatus`는 `WAITING`부터 시작한다.
 - `OrderLineItem`은 1개 이상 필요하다.
 - `OrderLineItem`의 `quantity`는 0개 이상이어야한다.
 - `OrderLineItem`의 `Menu`는 `MenuStatus`가 `Display`여야한다.
+**행위**
+- 주문을 등록할 수 있다.
 - `OrderStatus`를 `ACCEPTED`로 변경한다.
   - `OrderStatus`는 `WAITING`이어야한다.
-  - 배달 대행 업체에 배달을 요청한다.
 - `OrderStatus`를 `SERVED`로 변경한다.
   - `OrderStatus`는 `ACCEPTED`이어야한다.
 - `OrderStatus`를 `COMPLETED`로 변경한다.
