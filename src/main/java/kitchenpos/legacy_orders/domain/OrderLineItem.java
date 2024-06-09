@@ -1,4 +1,4 @@
-package kitchenpos.orders.legacy.domain;
+package kitchenpos.legacy_orders.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

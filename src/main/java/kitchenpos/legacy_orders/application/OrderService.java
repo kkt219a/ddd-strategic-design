@@ -1,15 +1,15 @@
-package kitchenpos.orders.legacy.application;
+package kitchenpos.legacy_orders.application;
 
+import kitchenpos.legacy_orders.domain.OrderLineItem;
+import kitchenpos.legacy_orders.domain.OrderRepository;
+import kitchenpos.legacy_orders.domain.OrderStatus;
+import kitchenpos.legacy_orders.domain.OrderType;
 import kitchenpos.menu.domain.menu.Menu;
 import kitchenpos.menu.domain.menu.MenuRepository;
-import kitchenpos.orders.legacy.domain.Order;
-import kitchenpos.orders.legacy.domain.OrderLineItem;
-import kitchenpos.orders.legacy.domain.OrderRepository;
-import kitchenpos.orders.legacy.domain.OrderStatus;
-import kitchenpos.orders.eatinorders.domain.order_table.OrderTable;
-import kitchenpos.orders.eatinorders.domain.order_table.OrderTableRepository;
-import kitchenpos.orders.legacy.domain.OrderType;
-import kitchenpos.orders.deliveryorders.domain.KitchenridersClient;
+import kitchenpos.legacy_orders.domain.Order;
+import kitchenpos.eatinorders.domain.order_table.OrderTable;
+import kitchenpos.eatinorders.domain.order_table.OrderTableRepository;
+import kitchenpos.deliveryorders.domain.KitchenridersClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

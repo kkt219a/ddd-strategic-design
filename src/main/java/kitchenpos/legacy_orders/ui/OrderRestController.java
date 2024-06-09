@@ -1,7 +1,7 @@
-package kitchenpos.orders.legacy.ui;
+package kitchenpos.legacy_orders.ui;
 
-import kitchenpos.orders.legacy.application.OrderService;
-import kitchenpos.orders.legacy.domain.Order;
+import kitchenpos.legacy_orders.application.OrderService;
+import kitchenpos.legacy_orders.domain.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
