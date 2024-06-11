@@ -1,4 +1,4 @@
-package kitchenpos.supports.delivery.infra;
+package kitchenpos.deliveryorders.infra;
 
 import kitchenpos.deliveryorders.domain.KitchenridersClient;
 import org.springframework.stereotype.Component;
